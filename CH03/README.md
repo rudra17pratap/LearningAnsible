@@ -183,3 +183,6 @@
     - `ansible -i webapp web -m dnf -a "name=libselinux-python state=present" -f 1 -b`
     - -f respond to `forks` which is the max number of concurrent hosts and -b is used for `priviledge excalation`
     - `ansible -i webapp web -m copy -a "src=file1 dest=/tmp/file1" -f 1`
+## challenge
+  - ad-hoc task to check the kernel release of local sys
+    - `ansible -i hosts host1 -m command -a "uname -r"`
