@@ -51,4 +51,41 @@
   ```
   - `ansible-playbook -i webapp webdeply.yaml`
   - so the task are made with only one lb and if serial is not there then it would had skipped, `[host1 -> lb1]`
+## Manage system configuration
+  - configure the appln and make the service started
+  - vim web-app.yaml
+  ```
+  ---
+  - name: configure web app
+    hosts: web
+    # git source code repo and the ver to checkout
+    vars:
+      repo: myrepo.com/repo.git
+      version: 8
+     
+    tasks:
+      - name: install nginx
+        debug:
+          msg: "dnf install nginx"
+          
+      # create a dir to hold the web content
+      - name: ensure web dir
+        debug: 
+          # we can use of file module if the dir is already there
+          msg: "/mkdir /webapp"
+          
+      - name: get content
+        debug:
+          msg: "git clone --branch {{ version }} {{ repo }} /webapp"
+      
+      - name: nginx config
+        debug:
+          msg: "put nginx config  in place"
+      
+      # check the service is running, use service module
+      - name: ensure nginx running
+        debug:
+          msg: "service nginx start"     
+  ```
+  - `ansible-playbook -i webapp web-app.yaml`
 ## 
