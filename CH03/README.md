@@ -175,5 +175,11 @@
         raw: exho $HOSTNAME
   ```
   - `ansible-playbook -i webapp docker.yaml -vv`
-## Repeat a task across a fleet
-  - 
+## Repeat a task across a fleet / Ad Hoc Tasks
+  - eg 
+    - `ansible -i webapp web -m debug -a "msg='shutdown -r now'"`
+    - `ansible -i webapp web -m command -a "rpm -q ansible"`
+    - `ansible-doc copy` - to check the documentation of any module
+    - `ansible -i webapp web -m dnf -a "name=libselinux-python state=present" -f 1 -b`
+    - -f respond to `forks` which is the max number of concurrent hosts and -b is used for `priviledge excalation`
+    - `ansible -i webapp web -m copy -a "src=file1 dest=/tmp/file1" -f 1`
