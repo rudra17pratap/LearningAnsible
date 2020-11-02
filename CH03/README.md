@@ -88,4 +88,57 @@
           msg: "service nginx start"     
   ```
   - `ansible-playbook -i webapp web-app.yaml`
-## 
+## React to configuration changes
+  - what if we want to change the config of nginx above and then we need to restart it
+  - we can use `notify` directive in any task, which instruct to notify handler on change and after notify add `changed_when` to true to reflect the change
+  - and we need to define handler section in the play
+  - handlers are just special task, with special meaning and only ran when required
+  ```
+  ---
+  - name: configure web app
+    hosts: web
+    # git source code repo and the ver to checkout
+    vars:
+      repo: myrepo.com/repo.git
+      version: 8
+     
+    tasks:
+      - name: install nginx
+        debug:
+          msg: "dnf install nginx"
+          
+      # create a dir to hold the web content
+      - name: ensure web dir
+        debug: 
+          # we can use of file module if the dir is already there
+          msg: "/mkdir /webapp"
+          
+      - name: get content
+        debug:
+          msg: "git clone --branch {{ version }} {{ repo }} /webapp"
+      
+      - name: nginx config
+        debug:
+          msg: "put nginx config  in place"
+        notify: restart nginx
+        changed_when: True
+      
+      # check the service is running, use service module
+      - name: ensure nginx running
+        debug:
+          msg: "service nginx start" 
+          
+    handlers:
+      - name: restart nginx
+        debug:
+          msg: "service nginx restart"
+  ```
+  - `ansible-playbook -i webapp web-app.yaml -vv`
+## Infra Management
+  - create new docker containers and play around with those containers
+  - vim docker.yaml
+  ```
+  ---
+  - name:
+    hosts: 
+  ```
