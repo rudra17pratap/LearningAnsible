@@ -22,7 +22,7 @@
     - inventory
     - state directives
     - credentials
-## Getting Started
+## `Getting Started`
   - [ansible doc](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
   - can use built in package manager `dnf`
   - for fedora > 22
