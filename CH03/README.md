@@ -139,6 +139,41 @@
   - vim docker.yaml
   ```
   ---
-  - name:
-    hosts: 
+  - name: make dockers
+    hosts: localhost
+    
+    # create 3 containers using busybox image
+    tasks:
+      - name: make containers
+        docker_container:
+          image: busybox
+          # have the containers sleep for a day
+          command: sleep 1d
+          # name the container with_seq loop
+          name: "busy{{ item }}"
+        with_sequence: count=3
+      
+      - name: add hosts
+        add_host:
+          # same name as the container above
+          name: "busy{{ item }}"
+          # adding to group
+          groups: dockers
+          # setting connection method
+          ansible_connection: docker
+        with_sequence: count=3
+        
+  # adding the second play for inside the containers
+  - name: hi from docker
+    hosts: dockers
+    # they do not have the python built ins, so we need to tell the ansible not to gather facts
+    gather_facts: False
+    
+    tasks:
+      - name: ping
+      # use of raw module, which doesnot require python on hosts
+        raw: exho $HOSTNAME
   ```
+  - `ansible-playbook -i webapp docker.yaml -vv`
+## Repeat a task across a fleet
+  - 
